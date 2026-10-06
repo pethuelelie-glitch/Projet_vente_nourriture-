@@ -72,12 +72,46 @@ class OrderCreateView(APIView):
 
         response_data = OrderSerializer(order).data
         
-        # LOGIQUE DE PAIEMENT WAVE (MOCK)
-        # Dans un cas réel, appel à l'API Wave/CinetPay ici pour obtenir un lien réel
-        payment_url = f"https://pay.wave.com/checkout/mock_session_{order.ref}"
-        response_data['payment_url'] = payment_url
+        # LOGIQUE DE PAIEMENT WAVE (API OFFICIELLE)
+        from django.conf import settings
+        import requests
+        
+        api_key = getattr(settings, 'WAVE_API_KEY', None)
+        
+        # Si la clé API n'est pas "vide" ou "mock"
+        if api_key and api_key != "wave_sn_prod_...":
+            wave_url = "https://api.wave.com/v1/checkout/sessions"
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            }
+            # L'API Wave nécessite un format précis
+            wave_payload = {
+                "amount": str(int(order.total)), 
+                "currency": "XOF", # Devise (CFA)
+                "client_reference": order.ref,
+                "error_url": f"http://127.0.0.1:5500/?payment=error&ref={order.ref}",
+                "success_url": f"http://127.0.0.1:5500/?payment=success&ref={order.ref}"
+            }
+            
+            try:
+                wave_response = requests.post(wave_url, json=wave_payload, headers=headers, timeout=30)
+                wave_data = wave_response.json()
+                if wave_response.status_code == 201 or wave_response.status_code == 200:
+                    response_data['payment_url'] = wave_data.get('checkout_url', wave_data.get('wave_launch_url'))
+                    # On enregistre l'ID de session Wave dans la commande pour vérification future
+                    order.payment_id = wave_data.get('id')
+                    order.save()
+                else:
+                    return Response({"error": "Erreur avec l'API Wave", "details": wave_data}, status=400)
+            except Exception as e:
+                return Response({"error": "Impossible de contacter Wave", "details": str(e)}, status=500)
+        else:
+            # Mode Mock si la clé API n'est pas encore mise
+            payment_url = f"https://pay.wave.com/checkout/mock_session_{order.ref}"
+            response_data['payment_url'] = payment_url
         
         # Lien pour le reçu PDF
-        response_data['receipt_url'] = f"/api/v1/orders/{order.id}/receipt/"
+        response_data['receipt_url'] = f"/api/v1/orders/{order.ref}/receipt/"
 
         return Response(response_data, status=status.HTTP_201_CREATED)

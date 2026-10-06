@@ -6,9 +6,9 @@ from orders.models import Order
 from io import BytesIO
 
 class OrderReceiptView(View):
-    def get(self, request, pk, *args, **kwargs):
+    def get(self, request, ref, *args, **kwargs):
         try:
-            order = Order.objects.get(pk=pk)
+            order = Order.objects.get(ref=ref)
         except Order.DoesNotExist:
             raise Http404("Commande non trouvée")
 
