@@ -6,7 +6,7 @@
  *           Si vide, la commande est envoyée uniquement via WhatsApp.
  */
 window.APP_CONFIG = {
-  WHATSAPP_NUMBER: "2250700000000",
-  API_URL: "",
+  WHATSAPP_NUMBER: "2250747776064",
+  API_URL: "http://127.0.0.1:8000/api/v1/orders/",
   CURRENCY: "F",
 };

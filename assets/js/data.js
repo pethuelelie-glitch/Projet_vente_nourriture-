@@ -4,12 +4,12 @@
  */
 window.PRODUCTS = [
   { id: "garba", name: "Attiéké Garba", cat: "attieke", price: 1000, img: "assets/images/garba.jpg", desc: "Attiéké accompagné de poisson, oignon, tomate et condiments." },
-  { id: "attieke-poisson", name: "Attiéké + poisson braisé", cat: "attieke", price: 2000, img: "assets/images/attieke-poisson.jpg", desc: "Poisson braisé accompagné d'attiéké, d'oignon, tomate et condiments." },
-  { id: "attieke-poulet", name: "Attiéké + poulet braisé", cat: "attieke", price: 2500, img: "assets/images/attieke-poulet.jpg", desc: "Poulet braisé accompagné d'attiéké et de ses garnitures." },
-  { id: "tchep-poulet", name: "Tchèp au poulet", cat: "riz", price: 2000, img: "assets/images/tchep-poulet.jpg", desc: "Riz préparé avec légumes et poulet." },
-  { id: "tchep-poisson", name: "Tchèp au poisson", cat: "riz", price: 2000, img: "assets/images/tchep-poisson.jpg", desc: "Riz préparé avec légumes et poisson." },
-  { id: "abolo", name: "Abolo", cat: "tradition", price: 1000, img: "assets/images/abolo.jpg", desc: "Abolo accompagné de sa garniture et de son accompagnement au choix." },
-  { id: "foufou", name: "Foufou", cat: "tradition", price: 2000, img: "assets/images/foufou.jpg", desc: "Foufou accompagné d'une sauce savoureuse." },
+  { id: "attieke-poisson", name: "Attiéké + poisson braisé", cat: "attieke", price: 1500, img: "assets/images/attieke-poisson.jpg", desc: "Poisson braisé accompagné d'attiéké, d'oignon, tomate et condiments." },
+  { id: "attieke-poulet", name: "Attiéké + poulet braisé", cat: "attieke", price: 1500, img: "assets/images/attieke-poulet.jpg", desc: "Poulet braisé accompagné d'attiéké et de ses garnitures." },
+  { id: "tchep-poulet", name: "Tchèp au poulet", cat: "riz", price: 1500, img: "assets/images/tchep-poulet.jpg", desc: "Riz préparé avec légumes et poulet." },
+  { id: "tchep-poisson", name: "Tchèp au poisson", cat: "riz", price: 1500, img: "assets/images/tchep-poisson.jpg", desc: "Riz préparé avec légumes et poisson." },
+  // { id: "abolo", name: "Abolo", cat: "tradition", price: 1000, img: "assets/images/abolo.jpg", desc: "Abolo accompagné de sa garniture et de son accompagnement au choix." },
+  // { id: "foufou", name: "Foufou", cat: "tradition", price: 2000, img: "assets/images/foufou.jpg", desc: "Foufou accompagné d'une sauce savoureuse." },
 ];
 
 window.FORMULES = [

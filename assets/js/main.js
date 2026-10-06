@@ -92,23 +92,46 @@
     const items = Object.entries(cart).map(([id, qty]) => ({ id, name: find(id).name, qty, unitPrice: find(id).price }));
     const order = { ref: "GN-" + Date.now().toString(36).toUpperCase(), customer: data, items, total: total(), createdAt: new Date().toISOString() };
 
-    if (C.API_URL) {
-      try { await fetch(C.API_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(order) }); }
-      catch (err) { console.warn("API indisponible, envoi WhatsApp seul", err); }
+    if (!C.API_URL) {
+      toast("Erreur : l'API de paiement n'est pas configurée.");
+      return;
     }
-    const msg = [
-      `🍽️ *Nouvelle commande ${order.ref}*`, "",
-      ...items.map((i) => `• ${i.qty} × ${i.name} — ${fmt(i.qty * i.unitPrice)}`), "",
-      `*Total estimé :* ${fmt(order.total)}`,
-      `*Nom :* ${data.name}`, `*Tél :* ${data.phone}`, `*Mode :* ${data.mode}`,
-      data.mode === "Livraison" ? `*Adresse :* ${data.address || "-"}` : null,
-      `*Pour le :* ${data.date.replace("T", " à ")}`, `*Paiement :* ${data.payment}`,
-      data.note ? `*Note :* ${data.note}` : null,
-    ].filter(Boolean).join("\n");
-    window.open(`https://wa.me/${C.WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+    
+    try { 
+      const res = await fetch(C.API_URL, { 
+        method: "POST", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify(order) 
+      }); 
+      
+      if (!res.ok) throw new Error("Erreur serveur");
+      const respData = await res.json();
+      
+      // On vide le panier avant de partir
+      cart = {}; save(); form.reset();
 
-    $("#orderRef").textContent = order.ref;
-    cart = {}; save(); form.reset(); step("Done");
+      if (respData.payment_url) {
+          window.location.href = respData.payment_url;
+      } else {
+          // Si pour une raison quelconque on n'a pas d'URL (ou mock désactivé), on affiche l'étape final
+          step("Done");
+          $("#orderRef").textContent = order.ref;
+          if (respData.receipt_url) {
+              const receiptUrl = window.location.origin.replace('5500', '8000') + respData.receipt_url;
+              const btn = document.createElement("a");
+              btn.href = receiptUrl;
+              btn.target = "_blank";
+              btn.className = "btn btn--ghost btn--full";
+              btn.style.marginTop = "15px";
+              btn.textContent = "Télécharger le reçu PDF";
+              $("#stepDone .drawer__body").appendChild(btn);
+          }
+      }
+    }
+    catch (err) { 
+      console.error(err);
+      toast("Erreur lors de la communication avec le serveur."); 
+    }
   });
 
   /* ---------- UI ---------- */
