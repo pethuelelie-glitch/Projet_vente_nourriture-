@@ -48,6 +48,7 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -142,3 +143,30 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Gnamienssa Admin",
+    "site_header": "Gnamienssa",
+    "site_brand": "Gnamienssa",
+    "welcome_sign": "Bienvenue sur l'administration de Gnamienssa",
+    "search_model": ["orders.Order", "products.Product"],
+    "show_ui_builder": False,
+    "topmenu_links": [
+        {"name": "Accueil",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"model": "orders.Order"},
+    ],
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "products.Product": "fas fa-hamburger",
+        "orders.Order": "fas fa-shopping-cart",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "pulse",
+    "dark_mode_theme": "darkly",
+}

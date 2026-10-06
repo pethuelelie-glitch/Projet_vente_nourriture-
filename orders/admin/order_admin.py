@@ -7,7 +7,7 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('ref', 'customer_name', 'customer_phone', 'mode', 'total', 'created_at')
-    list_filter = ('mode', 'payment_method', 'created_at')
+    list_display = ('ref', 'customer_name', 'customer_phone', 'mode', 'total', 'payment_method', 'payment_status', 'created_at')
+    list_filter = ('mode', 'payment_method', 'payment_status', 'created_at')
     search_fields = ('ref', 'customer_name', 'customer_phone')
     inlines = [OrderItemInline]

@@ -70,4 +70,14 @@ class OrderCreateView(APIView):
                 unit_price=unit_price,
             )
 
-        return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+        response_data = OrderSerializer(order).data
+        
+        # LOGIQUE DE PAIEMENT WAVE (MOCK)
+        # Dans un cas réel, appel à l'API Wave/CinetPay ici pour obtenir un lien réel
+        payment_url = f"https://pay.wave.com/checkout/mock_session_{order.ref}"
+        response_data['payment_url'] = payment_url
+        
+        # Lien pour le reçu PDF
+        response_data['receipt_url'] = f"/api/v1/orders/{order.id}/receipt/"
+
+        return Response(response_data, status=status.HTTP_201_CREATED)

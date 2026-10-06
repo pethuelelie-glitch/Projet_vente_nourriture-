@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Reçu {{ order.ref }}</title>
+    <style>
+        body { font-family: Helvetica, sans-serif; font-size: 14px; color: #333; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { margin: 0; color: #2c3e50; }
+        .info { margin-bottom: 20px; }
+        .info strong { display: inline-block; width: 150px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f8f9fa; }
+        .total { font-weight: bold; font-size: 18px; text-align: right; margin-top: 20px; }
+        .footer { text-align: center; margin-top: 50px; font-size: 12px; color: #777; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>GNAMIENSSA</h1>
+        <p>Reçu de commande</p>
+    </div>
+    
+    <div class="info">
+        <p><strong>Réf Commande :</strong> {{ order.ref }}</p>
+        <p><strong>Date :</strong> {{ order.created_at|date:"d/m/Y H:i" }}</p>
+        <p><strong>Client :</strong> {{ order.customer_name }} ({{ order.customer_phone }})</p>
+        <p><strong>Mode :</strong> {{ order.mode }}</p>
+        <p><strong>Paiement :</strong> {{ order.payment_method }} ({{ order.get_payment_status_display }})</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Article</th>
+                <th>Quantité</th>
+                <th>Prix Unitaire</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+            <tr>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.unit_price }} FCFA</td>
+                <td>{% widthratio item.quantity 1 item.unit_price %} FCFA</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total">
+        Total à payer : {{ order.total }} FCFA
+    </div>
+
+    <div class="footer">
+        Merci pour votre commande chez Gnamienssa !<br>
+        Pour toute question, contactez-nous au 0700000000.
+    </div>
+</body>
+</html>
