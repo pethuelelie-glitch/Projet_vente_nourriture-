@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Les Délices de Gnamienssa — Cuisine ivoirienne sur commande</title>
+  <meta name="description" content="Attiéké, garba, tchèp, abolo, foufou… Commandez en ligne vos plats ivoiriens savoureux et généreux. Livraison ou retrait." />
+  <meta property="og:title" content="Les Délices de Gnamienssa" />
+  <meta property="og:description" content="Le goût qui vous fait revenir. Cuisine ivoirienne sur commande." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,500&family=Caveat:wght@600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <!-- ====== NAV ====== -->
+  <header class="nav" id="nav">
+    <a href="#top" class="brand">
+      <span class="brand__mark">G</span>
+      <span class="brand__text">Les Délices <em>de Gnamienssa</em></span>
+    </a>
+    <nav class="nav__links">
+      <a href="#menu">Menu</a>
+      <a href="#formules">Formules</a>
+      <a href="#supplements">Suppléments</a>
+      <a href="#infos">Commander</a>
+    </nav>
+    <button class="cart-btn" id="openCart" aria-label="Ouvrir le panier">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
+      <span>Panier</span>
+      <b class="cart-count" id="cartCount">0</b>
+    </button>
+  </header>
+
+  <!-- ====== HERO ====== -->
+  <section class="hero" id="top">
+    <div class="hero__bg"><img src="assets/images/hero.jpg" alt="Table de plats ivoiriens" /></div>
+    <div class="hero__veil"></div>
+    <div class="hero__content">
+      <p class="eyebrow reveal">Cuisine ivoirienne · Vente sur commande</p>
+      <h1 class="hero__title reveal">
+        Les Délices<br/><span>de Gnamienssa</span>
+      </h1>
+      <p class="hero__script reveal">Le goût qui vous fait revenir !</p>
+      <p class="hero__lead reveal">Des plats savoureux, généreux et préparés avec soin pour vous faire retrouver le goût de la cuisine ivoirienne.</p>
+      <div class="hero__cta reveal">
+        <a href="#menu" class="btn btn--gold">Commander maintenant</a>
+        <a href="#formules" class="btn btn--ghost">Formules famille</a>
+      </div>
+    </div>
+    <div class="stamp reveal">
+      <span>Vente</span><strong>sur</strong><span>commande</span>
+    </div>
+    <div class="hero__scroll">Défiler</div>
+  </section>
+
+  <!-- ====== MARQUEE ====== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>Attiéké</span>✦<span>Garba</span>✦<span>Poisson braisé</span>✦<span>Poulet braisé</span>✦<span>Tchèp</span>✦<span>Abolo</span>✦<span>Foufou</span>✦<span>Alloco</span>✦
+      <span>Attiéké</span>✦<span>Garba</span>✦<span>Poisson braisé</span>✦<span>Poulet braisé</span>✦<span>Tchèp</span>✦<span>Abolo</span>✦<span>Foufou</span>✦<span>Alloco</span>✦
+    </div>
+  </div>
+
+  <!-- ====== MENU ====== -->
+  <section class="section" id="menu">
+    <div class="section__head">
+      <p class="eyebrow">01 — La carte</p>
+      <h2 class="title">Notre <em>menu</em></h2>
+      <p class="muted">Choisissez vos plats, ajoutez-les au panier et validez votre commande en quelques secondes.</p>
+    </div>
+    <div class="filters" id="filters">
+      <button class="chip is-active" data-filter="all">Tout</button>
+      <button class="chip" data-filter="attieke">Attiéké</button>
+      <button class="chip" data-filter="riz">Riz</button>
+      <button class="chip" data-filter="tradition">Tradition</button>
+    </div>
+    <div class="grid" id="menuGrid"><!-- rendu par JS --></div>
+  </section>
+
+  <!-- ====== FORMULES ====== -->
+  <section class="section section--dark" id="formules">
+    <div class="section__head">
+      <p class="eyebrow">02 — À partager</p>
+      <h2 class="title">Nos formules <em>familiales</em></h2>
+      <p class="muted">La composition et le prix définitif sont établis selon le choix des plats.</p>
+    </div>
+    <div class="formules" id="formulesGrid"></div>
+  </section>
+
+  <!-- ====== SUPPLEMENTS ====== -->
+  <section class="section" id="supplements">
+    <div class="split">
+      <div>
+        <p class="eyebrow">03 — Pour aller plus loin</p>
+        <h2 class="title">Les <em>suppléments</em></h2>
+        <p class="muted">Complétez votre plat. Prix selon le supplément choisi.</p>
+      </div>
+      <ul class="supps" id="suppList"></ul>
+    </div>
+  </section>
+
+  <!-- ====== INFOS ====== -->
+  <section class="section section--cream" id="infos">
+    <div class="infos">
+      <article class="info reveal">
+        <span class="info__icon">🛵</span>
+        <h3>Livraison</h3>
+        <p>Disponible selon la zone. Frais communiqués à la confirmation.</p>
+      </article>
+      <article class="info reveal">
+        <span class="info__icon">📍</span>
+        <h3>Retrait</h3>
+        <p>Sur le lieu de préparation, à l'heure convenue.</p>
+      </article>
+      <article class="info reveal">
+        <span class="info__icon">💬</span>
+        <h3>WhatsApp / Téléphone</h3>
+        <p>Votre commande arrive directement chez nous pour confirmation.</p>
+      </article>
+    </div>
+    <p class="notice">Les commandes importantes doivent être passées à l'avance.</p>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="footer">
+    <p class="footer__script">Goûtez la différence avec Les Délices de Gnamienssa !</p>
+    <div class="values">
+      <span>Qualité</span><span>Fraîcheur</span><span>Satisfaction</span>
+    </div>
+    <h2 class="footer__big">Nous sommes là pour régaler vos papilles.</h2>
+    <p class="footer__small">© <span id="year"></span> Les Délices de Gnamienssa — Cuisine ivoirienne</p>
+  </footer>
+
+  <!-- ====== CART DRAWER ====== -->
+  <div class="overlay" id="overlay"></div>
+  <aside class="drawer" id="drawer" aria-label="Panier">
+    <div class="drawer__head">
+      <h3>Votre panier</h3>
+      <button class="icon-btn" id="closeCart" aria-label="Fermer">✕</button>
+    </div>
+
+    <div class="drawer__step" id="stepCart">
+      <ul class="cart-list" id="cartList"></ul>
+      <div class="cart-empty" id="cartEmpty">
+        <p>Votre panier est vide.</p>
+        <a href="#menu" class="btn btn--gold" data-close>Voir le menu</a>
+      </div>
+      <div class="drawer__foot" id="cartFoot">
+        <div class="total"><span>Total estimé</span><strong id="cartTotal">0 F</strong></div>
+        <button class="btn btn--gold btn--full" id="toCheckout">Passer la commande</button>
+      </div>
+    </div>
+
+    <form class="drawer__step checkout" id="stepCheckout" hidden>
+      <button type="button" class="link-back" id="backToCart">← Retour au panier</button>
+      <label>Nom complet<input name="name" required placeholder="Ex : Awa Koné" /></label>
+      <label>Téléphone<input name="phone" type="tel" required placeholder="+225 07 00 00 00 00" /></label>
+      <fieldset class="seg">
+        <legend>Mode</legend>
+        <label><input type="radio" name="mode" value="Livraison" checked /> <span>Livraison</span></label>
+        <label><input type="radio" name="mode" value="Retrait" /> <span>Retrait</span></label>
+      </fieldset>
+      <label id="addrField">Adresse / quartier<input name="address" placeholder="Cocody, Riviera 2…" /></label>
+      <label>Date & heure souhaitées<input name="date" type="datetime-local" required /></label>
+      <fieldset class="seg">
+        <legend>Paiement</legend>
+        <label><input type="radio" name="payment" value="Mobile Money" checked /> <span>Mobile Money</span></label>
+        <label><input type="radio" name="payment" value="Espèces" /> <span>Espèces</span></label>
+      </fieldset>
+      <label>Note (optionnel)<textarea name="note" rows="2" placeholder="Piment à part, sans oignon…"></textarea></label>
+      <div class="total"><span>Total estimé</span><strong id="checkoutTotal">0 F</strong></div>
+      <button class="btn btn--gold btn--full" type="submit">Confirmer & envoyer</button>
+      <p class="fine">Le prix final est confirmé par le restaurant selon vos choix.</p>
+    </form>
+
+    <div class="drawer__step done" id="stepDone" hidden>
+      <div class="done__icon">✓</div>
+      <h3>Merci !</h3>
+      <p>Votre commande <strong id="orderRef"></strong> a été envoyée. Nous vous recontactons très vite pour confirmation.</p>
+      <button class="btn btn--gold" id="doneClose">Fermer</button>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
