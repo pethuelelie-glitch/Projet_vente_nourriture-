@@ -21,21 +21,44 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 import os
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-01v1kmufo!1jc-#0h4j#ax6jnvtgwt^sybo*v!7yiw9axk)&@%')
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Par défaut en production (False). Pour le dev local, définir DJANGO_DEBUG=True.
+DEBUG = os.environ.get('DJANGO_DEBUG', '') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
-CORS_ALLOW_ALL_ORIGINS = True
+# SECURITY WARNING: keep the secret key used in production secret!
+if DEBUG:
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-01v1kmufo!1jc-#0h4j#ax6jnvtgwt^sybo*v!7yiw9axk)&@%')
+else:
+    # En production, forcer la présence d'une vraie clé secrète
+    SECRET_KEY = os.environ['SECRET_KEY']
+
+# Hôtes autorisés (ex: '.mon-domaine.com', 'mon-app.onrender.com')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,[::1]').split(',')
+
+# --- SECURITY SETTINGS (Checklist) ---
+if not DEBUG:
+    # Rediriger toutes les requêtes HTTP vers HTTPS
+    SECURE_SSL_REDIRECT = True
+    # Sécuriser les cookies pour qu'ils ne transitent que par HTTPS
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # HSTS (HTTP Strict Transport Security) pour forcer le navigateur à utiliser HTTPS
+    SECURE_HSTS_SECONDS = 31536000  # 1 an
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+# Empêcher le navigateur de deviner le type MIME
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+CORS_ALLOW_ALL_ORIGINS = DEBUG  # En prod, il vaut mieux spécifier les origines exactes si possible
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://localhost:5500',
-    'http://127.0.0.1:5500',
-]
+if not DEBUG:
+    CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://votre-domaine-frontend.com').split(',')
+
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    'CSRF_TRUSTED_ORIGINS', 
+    'http://localhost:8000,http://127.0.0.1:8000,http://localhost:5500,http://127.0.0.1:5500'
+).split(',')
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -66,6 +89,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -96,14 +120,16 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+import dj_database_url
 
+# Par défaut on garde SQLite pour le dev, mais en prod on lit DATABASE_URL
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -140,6 +166,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+# Dossier où collecter les fichiers statiques en production (python manage.py collectstatic)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+# Compression et cache des fichiers statiques avec Whitenoise
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
